@@ -1,0 +1,4 @@
+# Ignore stupid OS X stuff. (Seriously, Apple, you're making me look bad...)
+.DS_Store
+
+
