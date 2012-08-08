@@ -8,7 +8,7 @@
  * @param {Element} tabe The 3x3 table that makes the board.
  */
 function Game(table) {
-  this.board = Board(table);
+  this.board = Board();
   this.players = [HumanPlayer(),AIPlayer()];
   board.init();
 }
@@ -46,9 +46,8 @@ Game.prototype.clearmatch() {
  * tree searches.
  * 
  * @this {Board}
- * @param {Element} table The 3x3 table which makes the board.
  */
-function Board(table) {
+function Board() {
   throw new Error("Not yet implemented");
 }
 
