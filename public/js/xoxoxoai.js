@@ -15,8 +15,11 @@
  * @param {AIPlayer} player The player that should be used to mark a new tile.
  * @return {Board} The new (output) game state.
  */
-
 function RandomAI(board,player) {
-  throw new Error("Not yet implemented.");
-
+  var freecells = board.allEmpty();
+  if (freecells.length === 0) {
+    throw new Error("Board is full, can't play anything else.");
+  }
+  var choice = freecells[Math.floor(Math.random()*freecells.length)]
+  return board.changeCell(choice,player.num)
 }
