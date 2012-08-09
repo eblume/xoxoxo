@@ -10,31 +10,17 @@
 function Game(table) {
   this.board = new Board();
   this.players = [new HumanPlayer(1), new AIPlayer(2)];
-  board.init();
+  this.table = table;
 }
 
 /**
- * Start a new match, requiring that any previous match must have ended.
- *
- * This will automatically call this.clearmatch(), so make sure you score
- * any previous matches first!
+ * Start a new match.
  *
  * @this {Game}
  */
 Game.prototype.startmatch() {
   throw new Error("Not yet implemented");
 
-  // Make sure that the board is ready for a new match.
-  this.clearmatch();
-}
-
-/**
- * Clear out any existing match (without scoring) to prep for a new one.
- *
- * @this {Game}
- */
-Game.prototype.clearmatch() {
-  throw new Error("Not yet implemented");
 }
 
 /**
