@@ -60,14 +60,15 @@ Game.prototype.playerMove = function(player,board) {
   this.board = board;
   this.updateTable();
 
+  // Once a turn has completed, there are only 3 possibilities:
+  // 1) Someone won. Yay!
+  // 2) The game scratched. Boo!
+  // 3) We are ready for the next turn. *yawn*
   if (board.hasWinner()) {
-    // We have a winner!
     this.winner(player);
   } else if (board.full()) {
-    // Scratch game!
     this.scratch();
   } else {
-    // Ok, the table was updated and we're ready for a new turn. Bring it on!
     this.nextTurn();
   }
 }
