@@ -11,6 +11,7 @@ function Game(table) {
   this.board = new Board();
   this.players = [new HumanPlayer(1), new AIPlayer(2)];
   this.table = table;
+  this.nextplayer = 1;
 }
 
 /**
@@ -18,9 +19,82 @@ function Game(table) {
  *
  * @this {Game}
  */
-Game.prototype.startmatch() {
-  throw new Error("Not yet implemented");
+Game.prototype.startmatch = function() {
 
+  // In the future, we might put in some UI code here to signify to the user that a new
+  // match is beginning. Maybe a message, a flash, etc.
+
+  // Dispatch the next turn.
+  this.nextTurn();
+}
+
+/**
+ * Start a new turn. Each turn is assosciated with a player.
+ *
+ * @this {Game}
+ */
+Game.prototype.nextTurn = function() {
+  var curplayer = this.players[this.nextplayer];
+  this.nextplayer = (this.nextplayer + 1) % this.players.length;
+
+  curplayer.runTurn(function(newboard){
+    this.playerMove(curplayer,newboard);
+  });
+
+}
+
+
+/**
+ * Take a player's move and validate, process, and score it.
+ *
+ * Possibly triggers either a new turn, or the end of the game.
+ * Also, triggers redrawing the board and other UI elements.
+ *
+ * @this {Game}
+ * @param {Player} player The player that made the move.
+ * @param {Board} board The new board state after the player made the move.
+ */
+Game.prototype.playerMove = function(player,board) {
+  // Recall that this.board is the *abstract state* of the board, and NOT the actual
+  // GUI representation of the board. This function must synchronize the two!
+  this.board = board;
+  this.updateTable();
+
+  if (board.hasWinner()) {
+    // We have a winner!
+    this.winner(player);
+  } else if (board.full()) {
+    // Scratch game!
+    this.scratch();
+  } else {
+    // Ok, the table was updated and we're ready for a new turn. Bring it on!
+    this.nextTurn();
+  }
+}
+
+/**
+ * Trigger a 'scratch game' UI event.
+ *
+ * In the future, this might also start a new game or set the UI up for prompting
+ * the user to start a new game.
+ *
+ * @this {Game}
+ */
+Game.prototype.scratch = function() {
+  throw new Error("Not yet implemented");
+}
+
+
+/**
+ * Synchronize the GUI to the current game state.
+ *
+ * This is allowed to block, as the user is probably expecting the GUI to update
+ * immediatly.
+ *
+ * @this {Game}
+ */
+Game.prototype.updateTable = function() {
+  throw new Error("Not yet implemented");
 }
 
 /**
@@ -102,6 +176,17 @@ Board.prototype.allEmpty = function() {
 
 
 /**
+ * Returns true if there exists a 3-in-a-row on the board, false otherwise.
+ *
+ * @this {Board}
+ * @return {bool} "there is a 3-in-a-row on the board"
+ */
+Board.prototype.hasWinner = function() {
+  throw new Error("Not yet implemented");
+}
+
+
+/**
  * Create a new HumanPlayer object.
  *
  * @constructor
@@ -111,6 +196,18 @@ Board.prototype.allEmpty = function() {
 function HumanPlayer(num) {
   throw new Error("Not yet implemented");
   this.num = num;
+}
+
+
+/**
+ * Run (without blocking too much!!!) a turn for this human player.
+ * When the turn is complete, call the callback with the new board state.
+ *
+ * @this {HumanPlayer}
+ * @param {callback} func A callback to call with one argument - the post-turn game board.
+ */
+HumanPlayer.prototype.runTurn(callback) {
+  throw new Error("Not yet implemented");
 }
 
 /**
@@ -125,6 +222,16 @@ function AIPlayer(num) {
   this.num = num;
 }
 
+/**
+ * Run (without blocking too much!!!) a turn for this AI player.
+ * When the turn is complete, call the callback with the new board state.
+ *
+ * @this {AIPlayer}
+ * @param {callback} func A callback to call with one argument - the post-turn game board.
+ */
+AIPlayer.prototype.runTurn(callback) {
+  throw new Error("Not yet implemented");
+}
 
 /** 
  * Given a 3x3 table jQuery element, initializes a game of tic tac toe.
