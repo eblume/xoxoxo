@@ -1,5 +1,3 @@
-
-
 /**
  * Create an instance of a Game, which tracks a series of tictactoe matches.
  *
