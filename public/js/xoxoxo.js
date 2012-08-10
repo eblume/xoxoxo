@@ -80,7 +80,7 @@ Game.prototype.playerMove = function(player,board) {
  * @this {Game}
  */
 Game.prototype.scratch = function() {
-  throw new Error("Not yet implemented");
+  noty({type:'warning',text:'Scratch Game!'});
 }
 
 /**
@@ -91,7 +91,8 @@ Game.prototype.scratch = function() {
  * @this {Game}
  */
 Game.prototype.winner = function(player) {
-  throw new Error("Not yet implemented");
+  // TODO - Color this to be more appropriate to win/loss of a human player.
+  noty({type:'success',text:'Player '+player.num+' wins!'});
 }
 
 
@@ -104,9 +105,17 @@ Game.prototype.winner = function(player) {
  * @this {Game}
  */
 Game.prototype.updateTable = function() {
-  var cellid;
+  var cellid, token;
   for (var cellnum = 0; cellnum < 9; cellnum++) {
     cellid = cellidFromCellnum(cellnum);
+    if (this.board.cells[cellnum] === 0) {
+      token = '';
+    } else if (this.board.cells[cellnum] === 1) {
+      token = 'X';
+    } else {
+      token = 'O';
+    }
+    $(cellid).text(token);
   }
 }
 
@@ -232,7 +241,6 @@ Board.prototype.full = function() {
  * @param {number} num The number of this player - 1 or 2.
  */
 function HumanPlayer(num) {
-  throw new Error("Not yet implemented");
   this.num = num;
 }
 
@@ -242,10 +250,21 @@ function HumanPlayer(num) {
  * When the turn is complete, call the callback with the new board state.
  *
  * @this {HumanPlayer}
+ * @param {Element} table The table element for the game.
+ * @param {Board} board The current board state.
  * @param {callback} func A callback to call with one argument - the post-turn game board.
  */
-HumanPlayer.prototype.runTurn = function(callback) {
-  throw new Error("Not yet implemented");
+HumanPlayer.prototype.runTurn = function(table,board,callback) {
+  var cellid;
+  for (var cellnum = 0; cellnum < 9; cellnum++) {
+    cellid = cellidFromCellnum(cellnum);
+    if ($(cellid).text() !== '') {
+      $(cellid).click(function(eventobj) {
+        table.find('td').off('click');
+        callback(board.changeCell(cellnum,this.num));
+      });
+    }
+  }
 }
 
 /**
@@ -256,7 +275,6 @@ HumanPlayer.prototype.runTurn = function(callback) {
  * @param {number} num The number of this player - 1 or 2.
  */
 function AIPlayer(num) {
-  throw new Error("Not yet implemented");
   this.num = num;
 }
 
@@ -265,9 +283,11 @@ function AIPlayer(num) {
  * When the turn is complete, call the callback with the new board state.
  *
  * @this {AIPlayer}
+ * @param {Element} table The table element for the game. Probably NOT used for AI.
+ * @param {Board} board The current board state.
  * @param {callback} func A callback to call with one argument - the post-turn game board.
  */
-AIPlayer.prototype.runTurn = function(callback) {
+AIPlayer.prototype.runTurn = function(table,board,callback) {
   throw new Error("Not yet implemented");
 }
 
@@ -311,4 +331,33 @@ function checkWin(cells,tic,tac,toe) {
 }
 
 
+
+/****** Noty setup *******/
+// Noty sets up the notification system used here.
+// This structure lists ALL the possible settings, most are unused here.
+$.noty.defaults = {
+  layout: 'topCenter',
+  theme: 'default',
+  type: 'alert',
+  text: '',
+  dismissQueue: true, // If you want to use queue feature set this true
+  template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
+  animation: {
+    open: {height: 'toggle'},
+    close: {height: 'toggle'},
+    easing: 'swing',
+    speed: 500 // opening & closing animation speed
+  },
+  timeout: 3000, // delay for closing event. Set false for sticky notifications
+  force: false, // adds notification to the beginning of queue when set to true
+  modal: false,
+  closeWith: ['click'], // ['click', 'button', 'hover']
+  callback: {
+    onShow: function() {},
+    afterShow: function() {},
+    onClose: function() {},
+    afterClose: function() {}
+  },
+  buttons: false // an array of buttons
+};
 
