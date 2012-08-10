@@ -54,7 +54,9 @@
     <h2>Javascript is definitely required to make this work - sorry!</h2>
   </noscript>
   <script type="text/javascript">
-    tictactoe($("#board"));
+    $(function(){
+      tictactoe($("#board"));
+    });
   </script>
 </div>
 

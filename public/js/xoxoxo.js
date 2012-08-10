@@ -94,7 +94,23 @@ Game.prototype.playerMove = function(player,board) {
  * @this {Game}
  */
 Game.prototype.scratch = function() {
-  //TODO
+  $.pnotify({
+    title:"Scratch Game",
+    text:"It's a tie! Oh well.",
+    nonblock: true,
+    hide: false,
+    closer: false,
+    sticker: false
+  });
+  $.pnotify({
+    title:"WOOPS",
+    text:"You'll need to reload to play again. Sorry, working on that!",
+    type:"error",
+    nonblock: true,
+    hide: false,
+    closer: false,
+    sticker: false
+  });
 }
 
 /**
@@ -105,7 +121,25 @@ Game.prototype.scratch = function() {
  * @this {Game}
  */
 Game.prototype.winner = function(player) {
-  // TODO - Color this to be more appropriate to win/loss of a human player.
+  // TODO - better coloration for wins/losses, etc.
+  $.pnotify({
+    title:"Player "+player.num+" wins!",
+    text:"Better luck next time, other guy!", // todo - better message
+    type:'success',
+    nonblock: true,
+    hide: false,
+    closer: false,
+    sticker: false
+  });
+  $.pnotify({
+    title:"WOOPS",
+    text:"You'll need to reload to play again. Sorry, working on that!",
+    type:"error",
+    nonblock: true,
+    hide: false,
+    closer: false,
+    sticker: false
+  });
 }
 
 
@@ -269,6 +303,11 @@ function HumanPlayer(num) {
  */
 HumanPlayer.prototype.runTurn = function(table,board,callback) {
   var cellid;
+  $.pnotify({
+    title: 'Player ' + this.num,
+    text: "It's your turn!",
+    type: 'info'
+  });
   for (var cellnum = 0; cellnum < 9; cellnum++) {
     cellid = cellidFromCellnum(cellnum);
     if ($(cellid).text() === '') {
@@ -348,4 +387,8 @@ function makePlayerCellClickHandler(player,table,board,cellnum,callback) {
     callback(board.changeCell(cellnum,player.num));
   };
 }
+
+
+/***** PNOTIFY Defaults *******/
+$.pnotify.defaults.delay = 3000;
 
