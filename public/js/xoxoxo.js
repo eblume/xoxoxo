@@ -93,7 +93,10 @@ Game.prototype.scratch = function() {
  * @this {Game}
  */
 Game.prototype.updateTable = function() {
-  throw new Error("Not yet implemented");
+  var cellid;
+  for (var cellnum = 0; cellnum < 9; cellnum++) {
+    cellid = cellidFromCellnum(cellnum);
+  }
 }
 
 /**
@@ -186,6 +189,17 @@ Board.prototype.hasWinner = function() {
 
 
 /**
+ * Returns true if there are no more open spots on the board, false otherwise.
+ *
+ * @this {Board}
+ * @return {bool} "there are no open slots on the board"
+ */
+Board.prototype.full = function() {
+  return (this.allEmpty().length === 0);
+}
+
+
+/**
  * Create a new HumanPlayer object.
  *
  * @constructor
@@ -205,7 +219,7 @@ function HumanPlayer(num) {
  * @this {HumanPlayer}
  * @param {callback} func A callback to call with one argument - the post-turn game board.
  */
-HumanPlayer.prototype.runTurn(callback) {
+HumanPlayer.prototype.runTurn = function(callback) {
   throw new Error("Not yet implemented");
 }
 
@@ -228,7 +242,7 @@ function AIPlayer(num) {
  * @this {AIPlayer}
  * @param {callback} func A callback to call with one argument - the post-turn game board.
  */
-AIPlayer.prototype.runTurn(callback) {
+AIPlayer.prototype.runTurn = function(callback) {
   throw new Error("Not yet implemented");
 }
 
@@ -242,6 +256,21 @@ function tictactoe(table) {
   game.startmatch();
 }
 
+
+/******* HELPER FUNCTIONS *******/
+
+/**
+ * Return a cell ID like "#r1c2" for a cellnum like "5"
+ *
+ * @param {number} cellnum The number of the cell, 0-8. See Board() for docs.
+ * @return {string} A jquery-compatible ID selector string like "#r1c2" for the cell.
+ */
+function cellidFromCellnum(cellnum) {
+  var row, col;
+  row = Math.floor(cellnum / 3);
+  col = cellnum % 3;
+  return "#r"+row+"c"+col;
+}
 
 
 
