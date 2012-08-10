@@ -83,6 +83,17 @@ Game.prototype.scratch = function() {
   throw new Error("Not yet implemented");
 }
 
+/**
+ * Trigger a 'win game' UI event.
+ * In the future, this might also start a new game or track scoring or things like that.
+ *
+ * @param {Player} player The player that won.
+ * @this {Game}
+ */
+Game.prototype.winner = function(player) {
+  throw new Error("Not yet implemented");
+}
+
 
 /**
  * Synchronize the GUI to the current game state.
@@ -184,7 +195,21 @@ Board.prototype.allEmpty = function() {
  * @return {bool} "there is a 3-in-a-row on the board"
  */
 Board.prototype.hasWinner = function() {
-  throw new Error("Not yet implemented");
+  // There are only 8 winning combinations, so we'll just explicitly check them.
+  var c = this.cells;
+  return (
+    // Straight through the middle
+    checkWin(c,1,4,7) ||
+    checkWin(c,3,4,5) ||
+    // Diagnonal through the middle
+    checkWin(c,0,4,8) ||
+    checkWin(c,6,4,2) ||
+    // Sides
+    checkWin(c,0,3,6) ||
+    checkWin(c,6,7,8) ||
+    checkWin(c,2,5,8) ||
+    checkWin(c,0,1,2) 
+  );
 }
 
 
@@ -270,6 +295,19 @@ function cellidFromCellnum(cellnum) {
   row = Math.floor(cellnum / 3);
   col = cellnum % 3;
   return "#r"+row+"c"+col;
+}
+
+/**
+ * Return true if the cells queried all belong to one player which isn't 0
+ *
+ * @param {Array} cells The cell array for the board - a 9-length array of 0,1, or 2.
+ * @param {number} tic The first cell to check.
+ * @param {number} tac The second cell to check.
+ * @param {number} toe The third cell to check.
+ * @return {bool} True if the specified cells all belong to the same non-zero player.
+ */ 
+function checkWin(cells,tic,tac,toe) {
+  return ((cells[tic] === cells[tac]) && (cells[tac] === cells[toe]) && (cells[tic] !== 0));
 }
 
 
