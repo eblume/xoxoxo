@@ -32,6 +32,9 @@ Game.prototype.startmatch = function() {
   // In the future, we might put in some UI code here to signify to the user that a new
   // match is beginning. Maybe a message, a flash, etc.
 
+  // Do a quick table update to clear cruft.
+  this.updateTable();
+
   // Dispatch the next turn.
   this.nextTurn();
 }
@@ -270,7 +273,7 @@ HumanPlayer.prototype.runTurn = function(table,board,callback) {
   noty({type:'information',text:'Player '+this.num+", it's your turn!"});
   for (var cellnum = 0; cellnum < 9; cellnum++) {
     cellid = cellidFromCellnum(cellnum);
-    if ($(cellid).text() !== '') {
+    if ($(cellid).text() === '') {
       $(cellid).click(makePlayerCellClickHandler(this,table,board,cellnum,callback));
     }
   }
@@ -298,6 +301,7 @@ function AIPlayer(num) {
  */
 AIPlayer.prototype.runTurn = function(table,board,callback) {
   // For now, we're just hard-coding the Random AI. Later we'll let the player select that.
+  noty({type:'error',text:"Player "+this.num+", it's your turn!"});
   callback(RandomAI(board,this));
 }
 
