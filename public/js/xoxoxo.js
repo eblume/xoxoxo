@@ -1,3 +1,13 @@
+/** 
+ * Given a 3x3 table jQuery element, initializes a game of tic tac toe.
+ * 
+ * @param {Element} table The table element, a 3x3 grid, used as a board.
+ */
+function tictactoe(table) {
+  var game = new Game(table);
+  game.startmatch();
+}
+
 /**
  * Create an instance of a Game, which tracks a series of tictactoe matches.
  *
@@ -9,7 +19,7 @@ function Game(table) {
   this.board = new Board();
   this.players = [new HumanPlayer(1), new AIPlayer(2)];
   this.table = table;
-  this.nextplayer = 1;
+  this.nextplayer = 0;
 }
 
 /**
@@ -33,10 +43,11 @@ Game.prototype.startmatch = function() {
  */
 Game.prototype.nextTurn = function() {
   var curplayer = this.players[this.nextplayer];
+  var that = this;
   this.nextplayer = (this.nextplayer + 1) % this.players.length;
 
-  curplayer.runTurn(function(newboard){
-    this.playerMove(curplayer,newboard);
+  curplayer.runTurn(this.table,this.board,function(newboard){
+    that.playerMove(curplayer,newboard);
   });
 
 }
@@ -256,13 +267,11 @@ function HumanPlayer(num) {
  */
 HumanPlayer.prototype.runTurn = function(table,board,callback) {
   var cellid;
+  noty({type:'information',text:'Player '+this.num+", it's your turn!"});
   for (var cellnum = 0; cellnum < 9; cellnum++) {
     cellid = cellidFromCellnum(cellnum);
     if ($(cellid).text() !== '') {
-      $(cellid).click(function(eventobj) {
-        table.find('td').off('click');
-        callback(board.changeCell(cellnum,this.num));
-      });
+      $(cellid).click(makePlayerCellClickHandler(this,table,board,cellnum,callback));
     }
   }
 }
@@ -288,18 +297,10 @@ function AIPlayer(num) {
  * @param {callback} func A callback to call with one argument - the post-turn game board.
  */
 AIPlayer.prototype.runTurn = function(table,board,callback) {
-  throw new Error("Not yet implemented");
+  // For now, we're just hard-coding the Random AI. Later we'll let the player select that.
+  callback(RandomAI(board,this));
 }
 
-/** 
- * Given a 3x3 table jQuery element, initializes a game of tic tac toe.
- * 
- * @param {Element} table The table element, a 3x3 grid, used as a board.
- */
-function tictactoe(table) {
-  var game = new Game(table);
-  game.startmatch();
-}
 
 
 /******* HELPER FUNCTIONS *******/
@@ -331,9 +332,27 @@ function checkWin(cells,tic,tac,toe) {
 }
 
 
+/**
+ * Create a click handler for a given cell.
+ *
+ * @param {Player} player The player that this handler applies to.
+ * @param {Element} table The table grid for the game board.
+ * @param {Board} board The current game state, which may not change until callback is called.
+ * @param {number} cellnum The number (0-8) of the cell that this handler is bound to.
+ * @param {callback} callback The function to call when done handling, with a new board state.
+ */
+function makePlayerCellClickHandler(player,table,board,cellnum,callback) {
+  return function(eventobj) {
+    table.find('td').off('click');
+    noty({type:'error',text:'Player '+player.num+' played in '+cellidFromCellnum(cellnum)});
+    callback(board.changeCell(cellnum,player.num));
+  };
+}
+
+
 
 /****** Noty setup *******/
-// Noty sets up the notification system used here.
+// Noty sets up the notification system.
 // This structure lists ALL the possible settings, most are unused here.
 $.noty.defaults = {
   layout: 'topCenter',
