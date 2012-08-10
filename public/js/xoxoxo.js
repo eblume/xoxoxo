@@ -94,7 +94,7 @@ Game.prototype.playerMove = function(player,board) {
  * @this {Game}
  */
 Game.prototype.scratch = function() {
-  noty({type:'warning',text:'Scratch Game!'});
+  //TODO
 }
 
 /**
@@ -106,7 +106,6 @@ Game.prototype.scratch = function() {
  */
 Game.prototype.winner = function(player) {
   // TODO - Color this to be more appropriate to win/loss of a human player.
-  noty({type:'success',text:'Player '+player.num+' wins!'});
 }
 
 
@@ -270,7 +269,6 @@ function HumanPlayer(num) {
  */
 HumanPlayer.prototype.runTurn = function(table,board,callback) {
   var cellid;
-  noty({type:'information',text:'Player '+this.num+", it's your turn!"});
   for (var cellnum = 0; cellnum < 9; cellnum++) {
     cellid = cellidFromCellnum(cellnum);
     if ($(cellid).text() === '') {
@@ -301,7 +299,6 @@ function AIPlayer(num) {
  */
 AIPlayer.prototype.runTurn = function(table,board,callback) {
   // For now, we're just hard-coding the Random AI. Later we'll let the player select that.
-  noty({type:'error',text:"Player "+this.num+", it's your turn!"});
   callback(RandomAI(board,this));
 }
 
@@ -348,39 +345,7 @@ function checkWin(cells,tic,tac,toe) {
 function makePlayerCellClickHandler(player,table,board,cellnum,callback) {
   return function(eventobj) {
     table.find('td').off('click');
-    noty({type:'error',text:'Player '+player.num+' played in '+cellidFromCellnum(cellnum)});
     callback(board.changeCell(cellnum,player.num));
   };
 }
-
-
-
-/****** Noty setup *******/
-// Noty sets up the notification system.
-// This structure lists ALL the possible settings, most are unused here.
-$.noty.defaults = {
-  layout: 'topCenter',
-  theme: 'default',
-  type: 'alert',
-  text: '',
-  dismissQueue: true, // If you want to use queue feature set this true
-  template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
-  animation: {
-    open: {height: 'toggle'},
-    close: {height: 'toggle'},
-    easing: 'swing',
-    speed: 500 // opening & closing animation speed
-  },
-  timeout: 3000, // delay for closing event. Set false for sticky notifications
-  force: false, // adds notification to the beginning of queue when set to true
-  modal: false,
-  closeWith: ['click'], // ['click', 'button', 'hover']
-  callback: {
-    onShow: function() {},
-    afterShow: function() {},
-    onClose: function() {},
-    afterClose: function() {}
-  },
-  buttons: false // an array of buttons
-};
 
