@@ -338,7 +338,7 @@ function AIPlayer(num) {
  */
 AIPlayer.prototype.runTurn = function(table,board,callback) {
   // For now, we're just hard-coding the Random AI. Later we'll let the player select that.
-  callback(RandomAI(board,this));
+  RandomAI(board,this,callback);
 }
 
 

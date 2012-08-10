@@ -13,13 +13,14 @@
  *
  * @param {Board} board The input game state, which will not be mutated.
  * @param {AIPlayer} player The player that should be used to mark a new tile.
- * @return {Board} The new (output) game state.
+ * @param {callback} callback Function to call with one argument - the new game state.
  */
-function RandomAI(board,player) {
+function RandomAI(board,player,callback) {
   var freecells = board.allEmpty();
   if (freecells.length === 0) {
     throw new Error("Board is full, can't play anything else.");
   }
   var choice = freecells[Math.floor(Math.random()*freecells.length)]
-  return board.changeCell(choice,player.num)
+  callback(board.changeCell(choice,player.num));
 }
+
