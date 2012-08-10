@@ -46,6 +46,11 @@ function RandomAI(board,player,callback) {
  * @param {AIPlayer} player The player that should be used to mark a new tile.
  * @param {callback} callback Function to call with one argument - the new game state.
  */
+// TODO - there is currently a major flaw in this AI, where it will happily let you get
+// a win if it thinks it can make a move that has more wins, ultimately. This is of course
+// pretty stupid, but it escaped me momentarily how to encapsulte the "don't let yourself
+// lose" logic without implementing the optimal AI directly, which is not the purpose of
+// this AI.
 function BruteAI(board,player,callback) {
   var freecells = board.allEmpty();
   var top_scored_move; 
@@ -71,7 +76,7 @@ function BruteAI(board,player,callback) {
       top_scored_cell = cellnum;
     }
   }
-  callback(board.changeCell(top_scored_cellnum,player.num));
+  callback(board.changeCell(top_scored_cell,player.num));
 }
 
 /**
@@ -129,13 +134,14 @@ function addScore(a,b) {
 }
 
 /**
- * Returns true if score a is greater than score b. Wins compared first, then losses.
+ * Returns true if score a is greater than score b.
  *
  * @param {Score} a The score being checked
  * @param {Score} b The score being compared
  * @return {bool} a > b
  */
 function compareScores(a,b) {
-  return ((a.wins > b.wins) || 
-          ((a.wins === b.wins) && (a.losses < b.losses)));
+  //return ((a.wins > b.wins) || 
+  //        ((a.wins === b.wins) && (a.losses < b.losses)));
+  return (a.wins - a.losses) > (b.wins - b.losses);
 }

@@ -31,6 +31,7 @@ Game.prototype.startmatch = function() {
 
   // In the future, we might put in some UI code here to signify to the user that a new
   // match is beginning. Maybe a message, a flash, etc.
+  this.board.dump();
 
   // Do a quick table update to clear cruft.
   this.updateTable();
@@ -71,6 +72,7 @@ Game.prototype.playerMove = function(player,board) {
   // GUI representation of the board. This function must synchronize the two!
   this.board = board;
   this.updateTable();
+  this.board.dump();
 
   // Once a turn has completed, there are only 3 possibilities:
   // 1) Someone won. Yay!
@@ -140,6 +142,7 @@ Game.prototype.winner = function(player) {
     closer: false,
     sticker: false
   });
+  throw new Error("Stack tract!");
 }
 
 
@@ -278,6 +281,21 @@ Board.prototype.hasWinner = function() {
  */
 Board.prototype.full = function() {
   return (this.allEmpty().length === 0);
+}
+
+/**
+ * Dump board state to the console for debug purposes.
+ *
+ * @this {Board}
+ */
+Board.prototype.dump = function() {
+  var c = this.cells;
+  console.log(""+c[0]+"|"+c[1]+"|"+c[2]);
+  console.log("-+-+-");
+  console.log(""+c[3]+"|"+c[4]+"|"+c[5]);
+  console.log("-+-+-");
+  console.log(""+c[6]+"|"+c[7]+"|"+c[8]);
+  console.log("");
 }
 
 
