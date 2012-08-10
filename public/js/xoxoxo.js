@@ -234,6 +234,7 @@ Board.prototype.changeCell = function(cell,value) {
  * @return {Array} An array of open positions, possibly empty.
  */
 Board.prototype.allEmpty = function() {
+  // TODO - memoize this. It gets called a *lot*, so beating O(n) would be nice.
   var freecells = [];
   for (var cellnum = 0; cellnum < 9; cellnum++) {
     if (this.cells[cellnum] === 0) {
@@ -338,7 +339,7 @@ function AIPlayer(num) {
  */
 AIPlayer.prototype.runTurn = function(table,board,callback) {
   // For now, we're just hard-coding the Random AI. Later we'll let the player select that.
-  RandomAI(board,this,callback);
+  BruteAI(board,this,callback);
 }
 
 
