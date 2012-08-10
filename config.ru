@@ -1,5 +1,5 @@
 use Rack::Static, 
-  :urls => ["/css", "/images", "/js"],
+  :urls => ["/css", "/img", "/js"],
   :root => "public"
 
 $stdout.sync = true
