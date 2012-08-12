@@ -64,7 +64,11 @@ function AIPlayer(num) {
  * @param {callback} func A callback to call with one argument - the post-turn game board.
  */
 AIPlayer.prototype.runTurn = function(table,board,callback) {
-  GoodAI(board,this,callback);
+  // Let's put in a short sleep so that the player has a chance to see the game state first.
+  var that = this;
+  setTimeout(function() {
+    GoodAI(board,this,callback);
+  },1200);
 }
 
 
