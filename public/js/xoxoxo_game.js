@@ -109,9 +109,10 @@ Game.prototype.scratch = function() {
  */
 Game.prototype.winner = function(player) {
   // TODO - better coloration for wins/losses, etc.
+  var other_player=(player.num%2)+1
   $.pnotify({
     title:"Player "+player.num+" wins!",
-    text:"Better luck next time, other guy!", // todo - better message
+    text:"Better luck next time, Player "+other_player+" !",
     type:'success',
     nonblock: true,
     hide: false,
