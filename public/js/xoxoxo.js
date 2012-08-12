@@ -67,7 +67,7 @@ AIPlayer.prototype.runTurn = function(table,board,callback) {
   // Let's put in a short sleep so that the player has a chance to see the game state first.
   var that = this;
   setTimeout(function() {
-    GoodAI(board,this,callback);
+    GoodAI(board,that,callback);
   },1200);
 }
 
