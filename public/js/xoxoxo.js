@@ -67,6 +67,11 @@ AIPlayer.prototype.runTurn = function(table,board,callback) {
   // Let's put in a short sleep so that the player has a chance to see the game state first.
   var that = this;
   setTimeout(function() {
+    // Why JavaScript needs to become a better language:
+    // if you change 'that' to 'this', the only visible effect is that the AI suddenly plays
+    // just a tiny bit worse. No errors, no illegal plays - it just suddenly makes a few tiny
+    // mistakes. I really wonder why (I mean I get the this/that binding issue), and I'd like
+    // to study this a bit closer.
     GoodAI(board,that,callback);
   },1200);
 }
