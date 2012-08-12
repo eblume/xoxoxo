@@ -217,6 +217,14 @@ function GoodAI(board,player,callback) {
   }
 
   // 4) Block a fork
+  // TODO - This falls short of a perfect implementation. A perfect implementation would
+  // split this check in to a few phases. It would examine the fork threat and determine if
+  // it can play a threat that forces the opposition to ignore its fork threat. If it can't do
+  // that (IE it would force the fork anyway) then instead it should do what it's doing here -
+  // play on the fork threat cell.
+  //
+  // It's very, very rare for this deficiency to cause this AI to lose (I think 2 games in the
+  // entire game space) so I omitted it for brevity.
   forkthreat = board.forkThreat(otherplayernum);
   if (forkthreat >= 0) {
     callback(board.changeCell(forkthreat,player.num));
