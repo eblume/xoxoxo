@@ -92,10 +92,6 @@ Game.prototype.scratch = function() {
   $.pnotify({
     title:"Scratch Game",
     text:"It's a tie! Oh well.",
-    nonblock: true,
-    hide: false,
-    closer: false,
-    sticker: false
   });
   this.finishGame();
 }
@@ -114,10 +110,6 @@ Game.prototype.winner = function(player) {
     title:"Player "+player.num+" wins!",
     text:"Better luck next time, Player "+other_player+"!",
     type:'success',
-    nonblock: true,
-    hide: false,
-    closer: false,
-    sticker: false
   });
   this.finishGame();
 }
