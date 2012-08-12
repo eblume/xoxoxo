@@ -73,7 +73,7 @@ AIPlayer.prototype.runTurn = function(table,board,callback) {
     // mistakes. I really wonder why (I mean I get the this/that binding issue), and I'd like
     // to study this a bit closer.
     GoodAI(board,that,callback);
-  },800);
+  },600);
 }
 
 
