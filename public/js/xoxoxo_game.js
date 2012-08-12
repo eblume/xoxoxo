@@ -18,10 +18,13 @@ function Game(table) {
  * @this {Game}
  */
 Game.prototype.startmatch = function() {
-
-  // In the future, we might put in some UI code here to signify to the user that a new
-  // match is beginning. Maybe a message, a flash, etc.
   //this.board.dump();
+  $.pnotify({
+    title:"Starting a new game!",
+    type:'success',
+  });
+  this.board = new Board();
+  this.nextplayer = 0;
 
   // Do a quick table update to clear cruft.
   this.updateTable();
@@ -94,15 +97,7 @@ Game.prototype.scratch = function() {
     closer: false,
     sticker: false
   });
-  $.pnotify({
-    title:"WOOPS",
-    text:"You'll need to reload to play again. Sorry, working on that!",
-    type:"error",
-    nonblock: true,
-    hide: false,
-    closer: false,
-    sticker: false
-  });
+  this.finishGame();
 }
 
 /**
@@ -123,16 +118,21 @@ Game.prototype.winner = function(player) {
     closer: false,
     sticker: false
   });
-  $.pnotify({
-    title:"WOOPS",
-    text:"You'll need to reload to play again. Sorry, working on that!",
-    type:"error",
-    nonblock: true,
-    hide: false,
-    closer: false,
-    sticker: false
-  });
-  throw new Error("Stack tract!");
+  this.finishGame();
+}
+
+/**
+ * Perform end-of-game (post-scoring) things. UI updates, new game prep, that sort of thing.
+ *
+ * @this {Game}
+ */
+Game.prototype.finishGame = function() {
+  var that = this;
+  this.table.find("caption").text("Starting a new game in 5 seconds...");
+  setTimeout(function(){
+    that.table.find("caption").text("Would you like to play a game?");
+    that.startmatch();
+  },5000);
 }
 
 
