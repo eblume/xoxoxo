@@ -8,6 +8,10 @@
  */
 
 
+
+
+/************* RandomAI **************/
+
 /**
  * Create a new gamestate where player has played on a random open tile.
  *
@@ -25,6 +29,8 @@ function RandomAI(board,player,callback) {
 }
 
 
+/************* BruteAI **************/
+
 /**
  * Non-symetrical brute force algorithm for AI.
  *
@@ -39,7 +45,7 @@ function RandomAI(board,player,callback) {
  *
  * Note, though, that this method is laughably slow compaired to a more complicated and
  * intelligent AI, such as a symmetry-seeking brute AI or (even better) the provably optimal
- * 'conditional AI' which need only perform about six different heuristic checks per turn to
+ * 'conditional AI' which need only perform about eight different heuristic checks per turn to
  * play an optimal game. But that comes later.
  *
  * @param {Board} board The input game state, which will not be mutated.
@@ -68,6 +74,7 @@ function BruteAI(board,player,callback) {
     // If this move wins, just short-circuit it and go there now!
     if (next_board.hasWinner()) {
       callback(next_board);
+      return;
     }
 
     checked_move = scoreByEnumeration(next_board,player.num,player.num);
@@ -145,3 +152,132 @@ function compareScores(a,b) {
   //        ((a.wins === b.wins) && (a.losses < b.losses)));
   return (a.wins - a.losses) > (b.wins - b.losses);
 }
+
+
+
+/************* GoodAI **************/
+
+/**
+ * Plays an optimal game of TicTacToe using a known best algorithm.
+ *
+ * Tic Tac Toe happens to have a known 'best' strategy - an algorithm you can follow to play
+ * a perfect game. So, yup. Probably want to use this instead of the other ones, if winning is
+ * the goal.
+ *
+ * @param {Board} board The input game state, which will not be mutated.
+ * @param {AIPlayer} player The player that should be used to mark a new tile.
+ * @param {callback} callback Function to call with one argument - the new game state.
+ */
+function GoodAI(board,player,callback) {
+  var freecells = board.allEmpty();
+  var next_board;
+  // TODO - as above, this code should get moved to Game logic or something.
+  var otherplayernum = (player.num%2)+1
+  var otherplayercells = board.playerCells(otherplayernum);
+  var otherplayerthreat;
+  var forkthreat;
+
+  // The strategy: take the first action that applies.
+
+  // First move special: play top left corner (or any corner really):
+  if (freecells.length===9) {
+    callback(board.changeCell(0,player.num));
+    return;
+  }
+
+  // 1) If we can, win!
+  for (var i=0; i < freecells.length; i++) {
+    next_board = board.changeCell(freecells[i],player.num);
+    if (next_board.hasWinner()) {
+      callback(next_board);
+      return;
+    }
+  }
+
+  // 2) Block an enemy win.
+  // Consider all pairs of the other player's cells to find a potential next-turn win.
+  if (otherplayercells.length > 1) {
+    for (var i=0; i < otherplayercells.length; i++) {
+      for (var j=(i+1); j < otherplayercells.length; j++) {
+        otherplayerthreat = Board.threat(otherplayercells[i],otherplayercells[j]) 
+        // If we have a threat AND the threat space is not played
+        if ((otherplayerthreat >= 0) && (board.cells[otherplayerthreat] === 0)) {
+          callback(board.changeCell(otherplayerthreat,player.num));
+          return;
+        }
+      }
+    }
+  }
+
+  // 3) Create a fork
+  forkthreat = board.forkThreat(player.num);
+  if (forkthreat >= 0) {
+    callback(board.changeCell(forkthreat,player.num));
+    return;
+  }
+
+  // 4) Block a fork
+  forkthreat = board.forkThreat(otherplayernum);
+  if (forkthreat >= 0) {
+    callback(board.changeCell(forkthreat,player.num));
+    return;
+  }
+
+  // 5) Play center
+  if (board.cells[4] === 0) {
+    callback(board.changeCell(4,player.num));
+    return;
+  }
+
+  // 6) Play opposite corner
+  if ((board.cells[0] === otherplayernum) && (board.cells[8] === 0)) {
+    callback(board.changeCell(8,player.num));
+    return;
+  } else if ((board.cells[8] === otherplayernum) && (board.cells[0] === 0)) {
+    callback(board.changeCell(0,player.num));
+    return;
+  } else if ((board.cells[2] === otherplayernum) && (board.cells[6] === 0)) {
+    callback(board.changeCell(6,player.num));
+    return;
+  } else if ((board.cells[6] === otherplayernum) && (board.cells[2] === 0)) {
+    callback(board.changeCell(2,player.num));
+    return;
+  }
+
+  // 7) Play empty corner
+  if (board.cells[0] === 0) {
+    callback(board.changeCell(0,player.num));
+    return;
+  } else if (board.cells[2] === 0) {
+    callback(board.changeCell(2,player.num));
+    return;
+  } if (board.cells[6] === 0) {
+    callback(board.changeCell(6,player.num));
+    return;
+  } if (board.cells[8] === 0) {
+    callback(board.changeCell(8,player.num));
+    return;
+  }
+
+  // 8) Play empty side
+  if (board.cells[1] === 0) {
+    callback(board.changeCell(1,player.num));
+    return;
+  } else if (board.cells[3] === 0) {
+    callback(board.changeCell(3,player.num));
+    return;
+  } if (board.cells[5] === 0) {
+    callback(board.changeCell(5,player.num));
+    return;
+  } if (board.cells[7] === 0) {
+    callback(board.changeCell(8,player.num));
+    return;
+  }
+  // We'll never get here becasuse of steps 5, 7, and 8.
+  throw new Error("AI entered inconsistent state, control flow didn't terminate.");
+}
+
+
+
+
+
