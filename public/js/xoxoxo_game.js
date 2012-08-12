@@ -65,7 +65,7 @@ Game.prototype.playerMove = function(player,board) {
   // GUI representation of the board. This function must synchronize the two!
   this.board = board;
   this.updateTable();
-  this.board.dump();
+  //this.board.dump();
 
   // Once a turn has completed, there are only 3 possibilities:
   // 1) Someone won. Yay!
