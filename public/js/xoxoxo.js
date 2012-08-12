@@ -31,7 +31,7 @@ Game.prototype.startmatch = function() {
 
   // In the future, we might put in some UI code here to signify to the user that a new
   // match is beginning. Maybe a message, a flash, etc.
-  this.board.dump();
+  //this.board.dump();
 
   // Do a quick table update to clear cruft.
   this.updateTable();
@@ -331,7 +331,7 @@ Board.prototype.getAllThreatened = function(player) {
   var found_index;
 
   for (var i=0; i < playercells.length; i++) {
-    for (var j=0; j < playercells.length; j++) {
+    for (var j=(i+1); j < playercells.length; j++) {
       checkcell = Board.threat(playercells[i],playercells[j]);
       found_index = jQuery.inArray(checkcell,freecells);
       if (found_index >= 0) {
@@ -489,8 +489,7 @@ function AIPlayer(num) {
  * @param {callback} func A callback to call with one argument - the post-turn game board.
  */
 AIPlayer.prototype.runTurn = function(table,board,callback) {
-  // For now, we're just hard-coding the Random AI. Later we'll let the player select that.
-  BruteAI(board,this,callback);
+  GoodAI(board,this,callback);
 }
 
 
