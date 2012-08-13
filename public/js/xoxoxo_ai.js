@@ -228,7 +228,7 @@ function GoodAI(board,player,callback) {
       // step 1.
       newthreats = board.changeCell(freecells[i],player.num).getAllThreatened(player.num);
       for (var j=0; j < newthreats.length; j++) {
-        if (jQuery.inArray(newthreats[j],forkthreats)) {
+        if (!jQuery.inArray(newthreats[j],forkthreats)) {
           // We have a move (freecells[i]) that doesn't help the enemy. Play it!
           callback(board.changeCell(freecells[i],player.num));
           return;
