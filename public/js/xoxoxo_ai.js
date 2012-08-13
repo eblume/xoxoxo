@@ -175,7 +175,8 @@ function GoodAI(board,player,callback) {
   var otherplayernum = (player.num%2)+1
   var otherplayercells = board.playerCells(otherplayernum);
   var otherplayerthreat;
-  var forkthreat;
+  var forkthreats;
+  var newthreats;
 
   // The strategy: take the first action that applies.
 
@@ -210,24 +211,33 @@ function GoodAI(board,player,callback) {
   }
 
   // 3) Create a fork
-  forkthreat = board.forkThreat(player.num);
-  if (forkthreat >= 0) {
-    callback(board.changeCell(forkthreat,player.num));
+  forkthreats = board.forkThreat(player.num);
+  if (forkthreats.length > 0) {
+    callback(board.changeCell(forkthreats[0],player.num));
     return;
   }
 
   // 4) Block a fork
-  // TODO - This falls short of a perfect implementation. A perfect implementation would
-  // split this check in to a few phases. It would examine the fork threat and determine if
-  // it can play a threat that forces the opposition to ignore its fork threat. If it can't do
-  // that (IE it would force the fork anyway) then instead it should do what it's doing here -
-  // play on the fork threat cell.
-  //
-  // It's very, very rare for this deficiency to cause this AI to lose (I think 2 games in the
-  // entire game space) so I omitted it for brevity.
-  forkthreat = board.forkThreat(otherplayernum);
-  if (forkthreat >= 0) {
-    callback(board.changeCell(forkthreat,player.num));
+  forkthreats = board.forkThreat(otherplayernum);
+  if (forkthreats.length > 0) {
+    // Sub-strategy 1: Play a 'threat' that doesn't end up forcing the opponent to
+    // play their forkthreat anyway. In other words, play a cell such that you create a 
+    // threat on a cell that ISN'T in 'forkthreats'.
+    for (var i=0; i < freecells.length; i++) {
+      // Note that these really are just 'new threats', otherwise we would have won during
+      // step 1.
+      newthreats = board.changeCell(freecells[i],player.num).getAllThreatened(player.num);
+      for (var j=0; j < newthreats.length; j++) {
+        if (jQuery.inArray(newthreats[j],forkthreats)) {
+          // We have a move (freecells[i]) that doesn't help the enemy. Play it!
+          callback(board.changeCell(freecells[i],player.num));
+          return;
+        }
+      }
+    }
+
+    // Sub-strategy 2: Play on any of the forkthreats spaces to stimy the opponent.
+    callback(board.changeCell(forkthreats[0],player.num));
     return;
   }
 

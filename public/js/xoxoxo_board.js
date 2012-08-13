@@ -174,20 +174,23 @@ Board.prototype.getAllThreatened = function(player) {
 }
 
 /**
- * Returns a cell that could be played by the player to create a fork.
+ * Returns all the cells that could be played by the player to create a fork.
  * 
  * @this {Board}
  * @param {number} player The board-number of the player to search for a threat.
- * @return {number} The cell number of the cell that creates a threat, or -1 if none.
+ * @return {Array} The cell numbers of the cells that creates a fork, possibly empty.
  */
 Board.prototype.forkThreat = function(player) {
   var threatened;
   var freecells = this.allEmpty();
+  var result = [];
   for (var i=0; i < freecells.length; i++) {
     threatened = this.changeCell(freecells[i],player).getAllThreatened(player);
-    if (threatened.length > 1) return freecells[i];
+    if (threatened.length > 1) {
+      result = union_arrays(result,threatened);
+    }
   }
-  return -1;
+  return result;
 }
 
 
@@ -259,4 +262,29 @@ Board.threat = function(a,b){
     }
   }
   return -1;
+}
+
+/*************** Helper Functions ***************/
+
+/**
+ * Return the union (unique-join) of two arrays.
+ *
+ * Thanks to KennyTM of stack overflow: http://stackoverflow.com/a/3629861/580866
+ *
+ * @param {Array} x The first array to join.
+ * @param {Array} y The second array to join.
+ * @return {Array} The resulting uniquely-joined 'union' array.
+ */
+function union_arrays (x, y) {
+  var obj = {};
+  for (var i = x.length-1; i >= 0; -- i)
+     obj[x[i]] = x[i];
+  for (var i = y.length-1; i >= 0; -- i)
+     obj[y[i]] = y[i];
+  var res = []
+  for (var k in obj) {
+    if (obj.hasOwnProperty(k))  // <-- optional
+      res.push(obj[k]);
+  }
+  return res;
 }
