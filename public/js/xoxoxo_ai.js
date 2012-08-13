@@ -231,13 +231,7 @@ function GoodAI(board,player,callback) {
     return;
   }
 
-  // 5) Play center
-  if (board.cells[4] === 0) {
-    callback(board.changeCell(4,player.num));
-    return;
-  }
-
-  // 6) Play opposite corner
+  // 5) Play opposite corner
   if ((board.cells[0] === otherplayernum) && (board.cells[8] === 0)) {
     callback(board.changeCell(8,player.num));
     return;
@@ -249,6 +243,12 @@ function GoodAI(board,player,callback) {
     return;
   } else if ((board.cells[6] === otherplayernum) && (board.cells[2] === 0)) {
     callback(board.changeCell(2,player.num));
+    return;
+  }
+
+  // 6) Play center
+  if (board.cells[4] === 0) {
+    callback(board.changeCell(4,player.num));
     return;
   }
 
