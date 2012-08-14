@@ -105,7 +105,8 @@ Game.prototype.scratch = function() {
  */
 Game.prototype.winner = function(player) {
   // TODO - better coloration for wins/losses, etc.
-  var other_player=(player.num%2)+1
+  var other_player=(player.num%2)+1;
+  player.score += 1;
   $.pnotify({
     title:"Player "+player.num+" wins!",
     text:"Better luck next time, Player "+other_player+"!",
@@ -121,6 +122,7 @@ Game.prototype.winner = function(player) {
  */
 Game.prototype.finishGame = function() {
   var that = this;
+  this.updateTable();
   this.table.find("caption").text("Starting a new game in 5 seconds...");
   setTimeout(function(){
     that.table.find("caption").text("Would you like to play a game?");
@@ -139,6 +141,8 @@ Game.prototype.finishGame = function() {
  */
 Game.prototype.updateTable = function() {
   var cellid, token;
+
+  // Update the table
   for (var cellnum = 0; cellnum < 9; cellnum++) {
     cellid = cellidFromCellnum(cellnum);
     if (this.board.cells[cellnum] === 0) {
@@ -150,4 +154,8 @@ Game.prototype.updateTable = function() {
     }
     $(cellid).text(token);
   }
+
+  // Update the scores
+  $("#player1 p").text(this.players[0].score);
+  $("#player2 p").text(this.players[1].score);
 }

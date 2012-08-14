@@ -17,6 +17,7 @@ function tictactoe(table) {
  */
 function HumanPlayer(num) {
   this.num = num;
+  this.score = 0;
 }
 
 /**
@@ -52,6 +53,7 @@ HumanPlayer.prototype.runTurn = function(table,board,callback) {
  */
 function AIPlayer(num) {
   this.num = num;
+  this.score = 0;
 }
 
 /**
