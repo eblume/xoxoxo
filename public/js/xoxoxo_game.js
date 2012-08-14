@@ -7,7 +7,8 @@
  */
 function Game(table) {
   this.board = new Board();
-  this.players = [new HumanPlayer(1), new AIPlayer(2)];
+  // Placeholder players - they'll get replaced in startmatch()
+  this.players = [new HumanPlayer(1),new HumanPlayer(2)];
   this.table = table;
   this.nextplayer = 0;
 }
@@ -24,6 +25,7 @@ Game.prototype.startmatch = function() {
     type:'success',
   });
   this.board = new Board();
+  this.updatePlayers();
   this.nextplayer = 0;
 
   // Do a quick table update to clear cruft.
@@ -47,6 +49,36 @@ Game.prototype.nextTurn = function() {
     that.playerMove(curplayer,newboard);
   });
 
+}
+
+/**
+ * Update the player list according to the UI
+ *
+ * @this {Game}
+ */
+Game.prototype.updatePlayers = function() {
+  // Small one-off helper function for getting data
+  var getplayer = function(playernum) {
+    var selected = $('#player'+playernum+' select').val();
+    var newplayer;
+    if (selected === "Human") {
+      newplayer = new HumanPlayer(playernum);
+    } else if (selected === "RandomAI") {
+      newplayer = new AIPlayer(playernum,randomAI);
+    } else if (selected === "BruteAI") {
+      newplayer = new AIPlayer(playernum,bruteAI);
+    } else if (selected === "GoodAI") {
+      newplayer = new AIPlayer(playernum,goodAI);
+    } else {
+      throw new Error("Unknown AI selected: "+selected);
+    }
+    return newplayer;
+  }
+  var playerone = getplayer(1);
+  var playertwo = getplayer(2);
+  playerone.score = this.players[0].score;
+  playertwo.score = this.players[1].score;
+  this.players = [playerone,playertwo];
 }
 
 

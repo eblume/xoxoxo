@@ -19,7 +19,7 @@
  * @param {AIPlayer} player The player that should be used to mark a new tile.
  * @param {callback} callback Function to call with one argument - the new game state.
  */
-function RandomAI(board,player,callback) {
+function randomAI(board,player,callback) {
   var freecells = board.allEmpty();
   if (freecells.length === 0) {
     throw new Error("Board is full, can't play anything else.");
@@ -57,7 +57,7 @@ function RandomAI(board,player,callback) {
 // pretty stupid, but it escaped me momentarily how to encapsulte the "don't let yourself
 // lose" logic without implementing the optimal AI directly, which is not the purpose of
 // this AI.
-function BruteAI(board,player,callback) {
+function bruteAI(board,player,callback) {
   var freecells = board.allEmpty();
   var top_scored_move; 
   var top_cored_cell;
@@ -168,7 +168,7 @@ function compareScores(a,b) {
  * @param {AIPlayer} player The player that should be used to mark a new tile.
  * @param {callback} callback Function to call with one argument - the new game state.
  */
-function GoodAI(board,player,callback) {
+function goodAI(board,player,callback) {
   var freecells = board.allEmpty();
   var next_board;
   // TODO - as above, this code should get moved to Game logic or something.

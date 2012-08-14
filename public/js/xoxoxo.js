@@ -5,6 +5,8 @@
  */
 function tictactoe(table) {
   var game = new Game(table);
+  // TODO - would be nice to decouple this from the UI directly, but that's overkill
+  // for now.
   game.startmatch();
 }
 
@@ -50,9 +52,11 @@ HumanPlayer.prototype.runTurn = function(table,board,callback) {
  * @constructor
  * @this {AIPlayer}
  * @param {number} num The number of this player - 1 or 2.
+ * @param {function} ai The AI function to use.
  */
-function AIPlayer(num) {
+function AIPlayer(num,ai) {
   this.num = num;
+  this.ai = ai;
   this.score = 0;
 }
 
@@ -74,7 +78,7 @@ AIPlayer.prototype.runTurn = function(table,board,callback) {
     // just a tiny bit worse. No errors, no illegal plays - it just suddenly makes a few tiny
     // mistakes. I really wonder why (I mean I get the this/that binding issue), and I'd like
     // to study this a bit closer.
-    GoodAI(board,that,callback);
+    that.ai(board,that,callback);
   },600);
 }
 
@@ -119,12 +123,11 @@ function checkWin(cells,tic,tac,toe) {
  * @param {callback} callback The function to call when done handling, with a new board state.
  */
 function makePlayerCellClickHandler(player,table,board,cellnum,callback) {
-  return function(eventobj) {
+  return function() {
     table.find('td').off('click');
     callback(board.changeCell(cellnum,player.num));
   };
 }
-
 
 /***** PNOTIFY Defaults *******/
 jQuery.pnotify.defaults.delay = 3000;
